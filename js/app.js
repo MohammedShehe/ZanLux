@@ -30,6 +30,10 @@
   function applyInfo() {
     const s = info.settings;
     document.title = `${info.name || 'ZanLux Scents'} — Luxury Perfumes & Fragrances${s.location ? ' in ' + s.location : ''}`;
+    const seoDescription = `${info.name || 'ZanLux Scents'} — ${info.tagline || 'Discover authentic luxury perfumes and fragrances'}${s.location ? ' in ' + s.location : ' in Dodoma, Tanzania'}. Browse available scents and contact us to order.`;
+    let md = document.querySelector('meta[name="description"]'); if (md) md.content = seoDescription.slice(0, 155);
+    let ogt = document.querySelector('meta[property="og:title"]'); if (ogt) ogt.content = document.title;
+    let ogd = document.querySelector('meta[property="og:description"]'); if (ogd) ogd.content = seoDescription.slice(0, 200);
     if (s.announcement) { const a = $('#announce'); a.textContent = s.announcement; a.classList.remove('d-none'); document.body.classList.add('has-announce'); }
     if (s.hero_title) { const parts = s.hero_title.trim().split(' '); const k = Math.ceil(parts.length / 2); $('#heroTitle').innerHTML = `${esc(parts.slice(0, k).join(' '))} <em>${esc(parts.slice(k).join(' '))}</em>`; }
     if (s.hero_subtitle) $('#heroSub').textContent = s.hero_subtitle;
@@ -76,7 +80,7 @@
       if (reset) products = r.rows; else products = products.concat(r.rows); paint(!reset); syncCart(); }
     catch (e) { if (!silent) { $('#grid').innerHTML = `<div class="col-12"><div class="empty-state"><i class="bi bi-wifi-off"></i><h4>We couldn’t load the collection</h4><p>${esc(e.message)}</p><button class="btn btn-ghost" onclick="location.reload()">Try again</button></div></div>`; } }
   }
-  $('#more').onclick = () => { state.page++; loadProducts(false); };
+  $('#more').onclick = async () => { const b = $('#more'); if (b.disabled) return; const label = b.innerHTML; b.disabled = true; b.setAttribute('aria-busy','true'); b.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Loading…'; state.page++; try { await loadProducts(false); } finally { b.disabled = false; b.removeAttribute('aria-busy'); b.innerHTML = label; } };
   let st; $('#q').oninput = e => { clearTimeout(st); st = setTimeout(() => { state.q = e.target.value.trim(); loadProducts(true); }, 350); };
   $('#sort').onchange = e => { state.sort = e.target.value; loadProducts(true); }; $('#price').onchange = e => { state.price = e.target.value; loadProducts(true); }; $('#avail').onchange = e => { state.avail = e.target.checked; loadProducts(true); };
   $('#grid').addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (a) return add(Number(a.dataset.a)); const v = e.target.closest('[data-v]'); if (v) quick(Number(v.dataset.v)); });
