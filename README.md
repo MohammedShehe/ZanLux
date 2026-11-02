@@ -7,3 +7,6 @@
    * Management app → Shop & website → edit hero text, about, founder, contact, announcement bar.
 4. Customer orders arrive instantly in **Website orders** (sound + notification). Mark Contacted → Confirmed → **Complete & record sale**
    (this is what adds the money to income and deducts stock).
+
+## Using the keyed Public API (optional)
+This site uses the original no-key `/api/public/zanlux` routes, which still work. For other websites or apps, FBBMS now offers a keyed, rate-limited `/api/v1` with webhooks; the full guide is in `docs/PUBLIC_API.md`.
